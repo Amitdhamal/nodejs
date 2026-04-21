@@ -1,6 +1,9 @@
 import fs from 'fs';
+import path from 'path';
+const faskFile = 'F:\\';
+const filePath = path.join( faskFile, 'demo','file.txt');
 
-fs.writeFile('file.txt', 'Hello, World!', (err) => {
+fs.writeFile( filePath, 'Hello, World!', (err) => {
     if (err) {
         console.error('Error writing file:', err);
         return;
@@ -8,42 +11,18 @@ fs.writeFile('file.txt', 'Hello, World!', (err) => {
     console.log('File has been created!');
 });
 
-fs.readFile('file.txt', 'utf8', (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-  console.log(data);
-});
 
-fs.appendFile('file.txt', ' hows going', (err) => {
-    if (err) {
-        console.error('Error appending file:', err);
-        return;
-    } 
-    console.log('File has been updated!');
-})
+// fs.appendFile('file.txt', ' \nhow are you...?', (err) => {
+//     if (err) {//         console.error('Error appending file:', err);
+//         return;
+//     } 
+//     console.log('File has been updated!');
+// })
 
-fs.readFile('file.txt', 'utf8', (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-  console.log(data);
-})
-
-fs.rename('file.txt', 'newFile.txt', (err) => {
-    if (err) {
-        console.error('Error renaming file:', err);
-        return;
-    } 
-    console.log('File has been renamed!');
-})
-
-fs.realpath('newFile.txt', (err, realpath) => {
-    if (err) { 
-        console.error('Error resolving file path:', err);
-        return;
-    }   
-    console.log('Resolved file path:', realpath);
-})
+// fs.readFile('file.txt', 'utf8', (err, data) => {
+//   if (err) {
+//     console.error(err);
+//     return;
+//   }
+//   console.log('read2:',data);
+// })

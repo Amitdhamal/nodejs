@@ -3,7 +3,6 @@ import os from 'os'
 import fs from 'fs'
 import express from 'express'
 import { comment } from './commentdata.js';
-
 const user = os.homedir().slice(os.homedir().lastIndexOf('\\')+1)
 const app = express()
 
@@ -22,6 +21,10 @@ const products = {
     }
   ]
 }
+
+
+
+
 
 
 // const server = http.createServer((req, res) => {
@@ -123,16 +126,18 @@ app.post('/api/login', (req, res) => {
 
 app.post('/api/commentbook',async(req,res)=>{
   try{
-    const page = parseInt(req.body.pageno) || 1
-    const limit = parseInt(req.body.limit) || 10
+    console.log('Request body:', req.body); // Debug log
+    const page = parseInt(req.body?.pageno) || 1
+    const limit = parseInt(req.body?.limit) || 10
     const startIndex = (page - 1) * limit
     const endIndex = startIndex + limit
     
-    const paginatedComments = await comment.slice(startIndex, endIndex)
+    const paginatedComments = comment.slice(startIndex, endIndex)
     res.status(200).json(paginatedComments)
   }
-  catch{
-    res.status(500).send('internal Server error')
+  catch(err){
+    console.error('Error:', err); // Log the actual error
+    res.status(500).send('internal Server errors')
   }
 })
 

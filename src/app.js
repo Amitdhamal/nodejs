@@ -2,6 +2,7 @@ import http from 'http';
 import os from 'os'
 import fs from 'fs'
 import express from 'express'
+import { comment } from './commentdata.js';
 
 const user = os.homedir().slice(os.homedir().lastIndexOf('\\')+1)
 const app = express()
@@ -58,6 +59,7 @@ const PORT = 3300
 //   console.log(`Server running on ${PORT}`)
 // })
 
+
 const users = [
     { "id": 1, "first_name": "Douglass", "last_name": "Chieco", "email": "dchieco0@cocolog-nifty.com", "gender": "Male", "ip_address": "31.182.40.31" },
     { "id": 2, "first_name": "Bartolomeo", "last_name": "Rubberts", "email": "brubberts1@is.gd", "gender": "Male", "ip_address": "55.188.31.173" },
@@ -73,17 +75,12 @@ const users = [
 
 
 app.use(express.json());
-app.post('/api/users/:username',async(req,res)=>{
+app.get('/api/users/:id',async(req,res)=>{
   
   try{
     console.log(req.params)
-    let username = req.params.username
-    let password = req.body.password
-    console.log({
-      username: username,
-      password:password
-    })
-    // await res.status(200).json(users.filter(user => user.id == id))
+    let id = req.params.id
+    await res.status(200).json(users.filter(user => user.id == id))
   }
   catch{
     res.status(500).send('internal Server errpor')
@@ -97,6 +94,45 @@ app.get('/api/users',async(req,res)=>{
   }
   catch{
     res.status(500).send('internal Server errpor')
+  }
+})
+
+app.get('/api/mobiles/:id', (req, res) => {
+    const mobiles = [
+        { id: 1, brand: 'Iphone ', price: 100099 },
+        { id: 2, brand: 'Samsung', price: 190099 },
+    ];
+    const mobile = mobiles.find(m => m.id === parseInt(req.params.id));
+    if (mobile) {
+        res.status(200).json(mobile);
+    } else {
+        res.status(404).json({ message: 'Mobile not found' });
+    }
+});
+
+app.post('/api/login', (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+    
+    if (username === 'admin' && password === 'Pass@123') {
+        res.status(200).json({ message: 'Login successful' });
+    } else {
+        res.status(401).json({ message: 'Invalid credentials' });
+    }
+});
+
+app.post('/api/commentbook',async(req,res)=>{
+  try{
+    const page = parseInt(req.body.pageno) || 1
+    const limit = parseInt(req.body.limit) || 10
+    const startIndex = (page - 1) * limit
+    const endIndex = startIndex + limit
+    
+    const paginatedComments = await comment.slice(startIndex, endIndex)
+    res.status(200).json(paginatedComments)
+  }
+  catch{
+    res.status(500).send('internal Server error')
   }
 })
 
